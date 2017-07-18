@@ -2,6 +2,8 @@ version: '2'
 services:
   zoo1:
       image: zookeeper:3.4
+      networks:
+        - zookeeper-net
       ports:
           - 2181:2181
       environment:
@@ -10,6 +12,8 @@ services:
 
   zoo2:
       image: zookeeper:3.4
+      networks:
+        - zookeeper-net
       ports:
           - 2182:2181
       environment:
@@ -18,6 +22,8 @@ services:
 
   zoo3:
       image: zookeeper:3.4
+      networks:
+        - zookeeper-net
       ports:
           - 2183:2181
       environment:
@@ -26,6 +32,11 @@ services:
 
   kafka1:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9092:9092"
 
@@ -39,6 +50,11 @@ services:
 
   kafka2:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9093:9092"
 
@@ -51,6 +67,11 @@ services:
 
   kafka3:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9094:9092"
 
@@ -63,6 +84,11 @@ services:
 
   kafka4:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9095:9092"
 
@@ -75,6 +101,11 @@ services:
 
   kafka5:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9096:9092"
 
@@ -87,6 +118,11 @@ services:
 
   kafka6:
     image: ches/kafka
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - kafka-net
     ports:
       - "9097:9092"
 
@@ -99,12 +135,18 @@ services:
 
   kafka-manager:
     image: sheepkiller/kafka-manager
+    depends_on:
+      - zoo1
+    networks:
+      - zookeeper-net
+      - manager-net
     ports:
       - 9000:9000
     environment:
       ZK_HOSTS: zoo1:2181,zoo2:2181,zoo3:2181
       APPLICATION_SECRET: lemein
 
-# networks:
-#   kafka-net:
-#     driver: bridge
+networks:
+  kafka-net:
+  zookeeper-net:
+  manager-net:
