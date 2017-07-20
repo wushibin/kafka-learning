@@ -29,6 +29,7 @@ public class SimpleProducer extends ShutdownableThread {
                        "org.apache.kafka.common.serialization.StringSerializer");
 
         producer = new KafkaProducer<String, String>(properties);
+        log.info("SimpleProducer starting....");
     }
 
     public void doWork() {

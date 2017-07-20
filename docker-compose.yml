@@ -30,19 +30,29 @@ services:
           ZOO_MY_ID: 3
           ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
 
+  zkui:
+    image: qnib/zkui:latest
+    networks:
+      - zookeeper-net
+    environment:
+      - ZKUI_ZK_SERVER=zoo1:2181,zoo2:2181,zoo3:2181
+    ports:
+      - "9090:9090"
+
   kafka1:
     image: ches/kafka
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.10
     ports:
       - "9092:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.10
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 100
@@ -53,14 +63,15 @@ services:
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.20
     ports:
       - "9093:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.20
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 200
@@ -70,14 +81,15 @@ services:
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.30
     ports:
       - "9094:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.30
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 300
@@ -87,14 +99,15 @@ services:
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.40
     ports:
       - "9095:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.40
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 400
@@ -104,14 +117,15 @@ services:
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.50
     ports:
       - "9096:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.50
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 500
@@ -121,14 +135,15 @@ services:
     depends_on:
       - zoo1
     networks:
-      - zookeeper-net
-      - kafka-net
+      zookeeper-net:
+      kafka-net:
+        ipv4_address: 172.16.238.60
     ports:
       - "9097:9092"
 
     environment:
       # ZOOKEEPER_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 172.16.238.60
       ZOOKEEPER_IP: zoo1
       ZOOKEEPER_PORT: 2181
       KAFKA_BROKER_ID: 600
@@ -148,5 +163,17 @@ services:
 
 networks:
   kafka-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
   zookeeper-net:
   manager-net:
+  # app_net:
+  #   driver: bridge
+  #   ipam:
+  #     driver: default
+  #     config:
+  #     - subnet: 172.16.248.0/24
+  #       gateway: 172.16.248.1
